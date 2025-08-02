@@ -83,63 +83,64 @@ const Documents = () => {
       console.error("Erro ao baixar PDF:", error);
       setPopupMensagem("Erro ao baixar PDF.");
     }
+  };
 
-    if (isLoading) {
-      return (
-        <Container>
-          <NavBar />
-          <div>Carregando documentos...</div>
-        </Container>
-      );
-    }
-
+  // ✅ Aqui sim é o retorno do componente
+  if (isLoading) {
     return (
       <Container>
         <NavBar />
-        <h1>Meus Documentos</h1>
-
-        {popupMensagem && (
-          <PopupMessage
-            message={popupMensagem}
-            onClose={() => setPopupMensagem(null)}
-            duration={3000}
-          />
-        )}
-
-        <DocumentsGrid>
-          {documents.length === 0 && (
-            <p>
-              Nenhum documento encontrado. Comece escaneando seu primeiro
-              documento.
-            </p>
-          )}
-
-          {documents.map((document) => (
-            <DocumentCard key={document.id}>
-              <DocumentImage src={document.documentUrl} />
-
-              <div style={{ paddingBottom: "12px" }}>
-                <Button
-                  name="Ver Chat"
-                  height="3rem"
-                  width="100%"
-                  onClick={() => handleViewChat(document.id)}
-                />
-              </div>
-
-              <Button
-                name="Baixar PDF"
-                height="3rem"
-                width="100%"
-                backgroundColor="green"
-                onClick={() => handleDownloadPDF(document.id)}
-              />
-            </DocumentCard>
-          ))}
-        </DocumentsGrid>
+        <div>Carregando documentos...</div>
       </Container>
     );
-  };
+  }
+
+  return (
+    <Container>
+      <NavBar />
+      <h1>Meus Documentos</h1>
+
+      {popupMensagem && (
+        <PopupMessage
+          message={popupMensagem}
+          onClose={() => setPopupMensagem(null)}
+          duration={3000}
+        />
+      )}
+
+      <DocumentsGrid>
+        {documents.length === 0 && (
+          <p>
+            Nenhum documento encontrado. Comece escaneando seu primeiro
+            documento.
+          </p>
+        )}
+
+        {documents.map((document) => (
+          <DocumentCard key={document.id}>
+            <DocumentImage src={document.documentUrl} />
+
+            <div style={{ paddingBottom: "12px" }}>
+              <Button
+                name="Ver Chat"
+                height="3rem"
+                width="100%"
+                onClick={() => handleViewChat(document.id)}
+              />
+            </div>
+
+            <Button
+              name="Baixar PDF"
+              height="3rem"
+              width="100%"
+              backgroundColor="green"
+              onClick={() => handleDownloadPDF(document.id)}
+            />
+          </DocumentCard>
+        ))}
+      </DocumentsGrid>
+    </Container>
+  );
 };
 
 export default Documents;
