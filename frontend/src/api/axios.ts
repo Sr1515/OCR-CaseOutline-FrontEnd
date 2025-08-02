@@ -1,6 +1,8 @@
 import axios from "axios";
 
+import "dotenv/config";
+
 export const api = axios.create({
-  baseURL: "https://ocr-caseoutline-backend-production.up.railway.app",
+  baseURL: process.env.VITE_API_URL,
   withCredentials: true,
 });

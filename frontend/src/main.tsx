@@ -1,11 +1,15 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
+import "dotenv/config";
 
-import { AuthProviderContext } from './context/AuthProvider';
-import AppRoutes from './routes/AppRoutes';
+import dotenv from "dotenv";
+dotenv.config();
 
-createRoot(document.getElementById('root')!).render(
+import { AuthProviderContext } from "./context/AuthProvider";
+import AppRoutes from "./routes/AppRoutes";
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProviderContext>

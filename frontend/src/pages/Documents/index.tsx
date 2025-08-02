@@ -56,21 +56,18 @@ const Documents = () => {
     }
 
     try {
-      const response = await fetch(
-        `http://localhost:3000/documents/download/${documentId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await api.get(`/documents/download/${documentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      });
 
-      if (!response.ok) {
+      if (!response || response.status !== 200) {
         throw new Error("Erro ao baixar PDF");
       }
 
-      const blob = await response.blob();
+      const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
 
       const a = document.createElement("a");
@@ -86,63 +83,63 @@ const Documents = () => {
       console.error("Erro ao baixar PDF:", error);
       setPopupMensagem("Erro ao baixar PDF.");
     }
-  };
 
-  if (isLoading) {
+    if (isLoading) {
+      return (
+        <Container>
+          <NavBar />
+          <div>Carregando documentos...</div>
+        </Container>
+      );
+    }
+
     return (
       <Container>
         <NavBar />
-        <div>Carregando documentos...</div>
-      </Container>
-    );
-  }
+        <h1>Meus Documentos</h1>
 
-  return (
-    <Container>
-      <NavBar />
-      <h1>Meus Documentos</h1>
-
-      {popupMensagem && (
-        <PopupMessage
-          message={popupMensagem}
-          onClose={() => setPopupMensagem(null)}
-          duration={3000}
-        />
-      )}
-
-      <DocumentsGrid>
-        {documents.length === 0 && (
-          <p>
-            Nenhum documento encontrado. Comece escaneando seu primeiro
-            documento.
-          </p>
+        {popupMensagem && (
+          <PopupMessage
+            message={popupMensagem}
+            onClose={() => setPopupMensagem(null)}
+            duration={3000}
+          />
         )}
 
-        {documents.map((document) => (
-          <DocumentCard key={document.id}>
-            <DocumentImage src={document.documentUrl} />
+        <DocumentsGrid>
+          {documents.length === 0 && (
+            <p>
+              Nenhum documento encontrado. Comece escaneando seu primeiro
+              documento.
+            </p>
+          )}
 
-            <div style={{ paddingBottom: "12px" }}>
+          {documents.map((document) => (
+            <DocumentCard key={document.id}>
+              <DocumentImage src={document.documentUrl} />
+
+              <div style={{ paddingBottom: "12px" }}>
+                <Button
+                  name="Ver Chat"
+                  height="3rem"
+                  width="100%"
+                  onClick={() => handleViewChat(document.id)}
+                />
+              </div>
+
               <Button
-                name="Ver Chat"
+                name="Baixar PDF"
                 height="3rem"
                 width="100%"
-                onClick={() => handleViewChat(document.id)}
+                backgroundColor="green"
+                onClick={() => handleDownloadPDF(document.id)}
               />
-            </div>
-
-            <Button
-              name="Baixar PDF"
-              height="3rem"
-              width="100%"
-              backgroundColor="green"
-              onClick={() => handleDownloadPDF(document.id)}
-            />
-          </DocumentCard>
-        ))}
-      </DocumentsGrid>
-    </Container>
-  );
+            </DocumentCard>
+          ))}
+        </DocumentsGrid>
+      </Container>
+    );
+  };
 };
 
 export default Documents;
